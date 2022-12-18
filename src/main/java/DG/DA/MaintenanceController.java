@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -15,12 +16,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RestController
 public class MaintenanceController {
 
-	@GetMapping("/employees")
-	public Map<String, String> sayHello() {
-	    HashMap<String, String> map = new HashMap<>();
-	    map.put("key", "value");
-	    map.put("foo", "bar");
-	    map.put("aa", "bb");
+	@GetMapping("/getRoutes")
+	public Map<String, Map<String, Object>> getRoutes() throws Exception {
+		List<MaintenanceRoute> routes = App.runLPSolve();
+	    HashMap<String, Map<String, Object>> map = new HashMap<>();
+	    for (int i = 0; i < routes.size(); i++) {
+	    	Map<String, Object> test = new HashMap<>();
+	    	String type = routes.get(i).type;
+		    String vehicle = routes.get(i).vehicle;		    
+		    String order = routes.get(i).order;
+		    Double xCoordinates = routes.get(i).xCoordinates;
+		    Double yCoordinates = routes.get(i).xCoordinates;
+		    test.put("type", type);
+		    test.put("vehicle", vehicle);
+		    test.put("order", order);
+		    test.put("xCoordinates", xCoordinates);
+		    test.put("yCoordinates", yCoordinates);
+		    map.put("features", test);
+	    }
 	    return map;
 	}
 	
