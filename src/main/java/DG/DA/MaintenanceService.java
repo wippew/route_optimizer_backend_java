@@ -6,6 +6,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class MaintenanceService {
         return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
     }
 
-    public static JSONObject getMaintenances() throws IOException, InterruptedException {
+    public static JSONArray getMaintenances() throws IOException, InterruptedException {
         var featureTypes = new String[1];
         featureTypes[0] = "wfs.huolto";
         var propertyRestrictions = new ArrayList<>();
@@ -58,8 +59,8 @@ public class MaintenanceService {
             CloseableHttpResponse response = httpClient.execute(request);
             String JSONString = EntityUtils.toString(response.getEntity(),
                     "UTF-8");
-            JSONObject jsonObject = new JSONObject(JSONString);
-            return jsonObject;
+            JSONArray jsonArray = new JSONArray(JSONString);
+            return jsonArray;
     }
 }
 

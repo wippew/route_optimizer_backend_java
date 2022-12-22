@@ -1,5 +1,6 @@
 package DG.DA;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +11,7 @@ public class App {
 	
 	private static final Logger logger = Logger.getLogger(App.class.getName());
 	
-	public static List<MaintenanceRoute> runLPSolve() throws Exception {
+	public static List<MaintenanceRoute> runLPSolve() throws IOException, InterruptedException {
 		
 		int depotCount = 2;
 		List<List<Integer>> depots = new ArrayList<List<Integer>>(depotCount);
@@ -18,19 +19,19 @@ public class App {
 			depots.add(new ArrayList<Integer>());
 	    }
 		depots.get(0).add(0);
-		depots.get(0).add(1);
-		depots.get(1).add(2);
-		depots.get(1).add(3);
-		
+//		depots.get(0).add(1);
+//		depots.get(1).add(2);
+//		depots.get(1).add(3);
+
 		int vehicleCount = 0;
 		for (List<Integer> depot: depots) {
 			vehicleCount += depot.size();
 		}
-		int taskCount = 40;
+		int taskCount = 20;
 		int totalCount = depotCount + taskCount;
 		int timeOfWorkingDay = 6 * 3600;
 		
-		//List<MaintenanceWorkDTO> data = Utils.getDataForTasks(totalCount);
+		List<MaintenanceWorkDTO> data = Utils.getDataForTasks(totalCount);
 		
 //		int fetchNewDurations = 1;
 //		if (fetchNewDurations == 1) {

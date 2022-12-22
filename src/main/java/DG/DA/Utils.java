@@ -15,8 +15,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
  
-import org.apache.poi.hssf.usermodel.HSSFWorkbook; 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.json.JSONObject;
 
+import static DG.DA.MaintenanceService.getMaintenances;
 
 
 public class Utils {
@@ -25,31 +27,12 @@ public class Utils {
 	private String sheet = "Huolto";
 	private static String fileLocation = "C:\\Users\\Victor\\eclipse-workspace\\mavenproject\\src\\main\\java\\fi\\testsolver\\mavenproject\\Mobilenote.xls";
 	
-	public static List<MaintenanceWorkDTO> getDataForTasks(int numberOfTasks) {
+	public static List<MaintenanceWorkDTO> getDataForTasks(int numberOfTasks) throws IOException, InterruptedException {
 		Double depotFirstLatitude = 60.875438;
 		Double depotFirstLongitude = 23.252894;
 		String depotWaypoint = depotFirstLatitude.toString() + "," + depotFirstLongitude.toString();
-		
 
-		List<Double> XCoordinatesColumn = getXCoordinatesFromFile(fileLocation);
-		List<Double> YCoordinatesColumn = getYCoordinatesFromFile(fileLocation);
-		List<String> typesAsString = getTypesAsStringFromFile(fileLocation);
-		List<Integer> demands = getDemandsFromFile(typesAsString);
-		
-		
-		List<MaintenanceWorkDTO> ret = new ArrayList<MaintenanceWorkDTO>();
-		MaintenanceWorkDTO depotDTO = new MaintenanceWorkDTO(depotFirstLatitude, depotFirstLongitude, 0, "depot_1", depotWaypoint);
-		ret.add(depotDTO);
-		for (int i = 0; i < numberOfTasks; i++) {
-			Double currentX = XCoordinatesColumn.get(i);
-			Double currentY = YCoordinatesColumn.get(i);
-			Integer currentDemand = demands.get(i);
-			String currentType = typesAsString.get(i);
-			String currentWaypoint = currentX.toString() + "," + currentY.toString();
-			MaintenanceWorkDTO dto = new MaintenanceWorkDTO(currentX, currentY, currentDemand, currentType, currentWaypoint);
-			ret.add(dto);
-		}		
-		return ret;
+		return new ArrayList<>();
 	}
 	
 	
