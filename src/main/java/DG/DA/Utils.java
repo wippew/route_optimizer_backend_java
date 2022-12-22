@@ -18,14 +18,14 @@ public class Utils {
 		String depotWaypoint = depotCoordinates[0].toString() + "," + depotCoordinates[1].toString();
 		MaintenanceWorkDTO depotMaintenanceDTO = new MaintenanceWorkDTO(depotCoordinates, 0, "DEPOT0", depotWaypoint);
 		JSONArray jsonArray = getMaintenances();
-		ArrayList<MaintenanceWorkDTO> maintenanceWorkDTOS = populateMaintenancesFromJson(jsonArray);
+		ArrayList<MaintenanceWorkDTO> maintenanceWorkDTOS = populateMaintenancesFromJson(jsonArray, numberOfTasks);
 		maintenanceWorkDTOS.add(0, depotMaintenanceDTO);
 
 		return maintenanceWorkDTOS;
 	}
 
-	private static ArrayList<MaintenanceWorkDTO> populateMaintenancesFromJson(JSONArray jsonArray) {
-		int nodeCount = 20;
+	private static ArrayList<MaintenanceWorkDTO> populateMaintenancesFromJson(JSONArray jsonArray, int numberOfTasks) {
+		int nodeCount = numberOfTasks;
 		ArrayList<MaintenanceWorkDTO> ret = new ArrayList<>();
 		for (int i = 0; i < nodeCount; i++) {
 			JSONObject obj = jsonArray.getJSONObject(i);
@@ -33,8 +33,8 @@ public class Utils {
 			if ((status.equals("Osoitettu") || status.equals("Avoin") || status.equals("Uusi")) && !obj.isNull("location")) {
 				JSONArray jsonCoordinates = obj.getJSONObject("location").getJSONArray("coordinates");
 				Double[] coordinates = new Double[2];
-				coordinates[0] = (double) jsonCoordinates.get(0);
-				coordinates[1] = (double) jsonCoordinates.get(1);
+				coordinates[0] = (double) jsonCoordinates.get(1);
+				coordinates[1] = (double) jsonCoordinates.get(0);
 				String type = obj.getJSONObject("workProperties").getJSONObject("laiteryhma").getString("value");
 				Integer demand = convertTypeToDemand(type);
 				String waypoint = coordinates[0].toString() + "," + coordinates[1].toString();

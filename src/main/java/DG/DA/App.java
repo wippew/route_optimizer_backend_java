@@ -14,7 +14,7 @@ public class App {
 	
 	public static List<MaintenanceRoute> runLPSolve() throws IOException, InterruptedException, URISyntaxException {
 
-		int depotCount = 2;
+		int depotCount = 1;
 		List<List<Integer>> depots = new ArrayList<List<Integer>>(depotCount);
 		for (int i = 0; i < depotCount; i++) {
 			depots.add(new ArrayList<Integer>());
@@ -28,7 +28,7 @@ public class App {
 		for (List<Integer> depot : depots) {
 			vehicleCount += depot.size();
 		}
-		int taskCount = 20;
+		int taskCount = 10;
 		int totalCount = depotCount + taskCount;
 		int timeOfWorkingDay = 6 * 3600;
 
@@ -36,7 +36,7 @@ public class App {
 
 		boolean fetchNewDurations = true;
 		if (fetchNewDurations) {
-			Double[][] duration = DurationService.getDurationMatrix(totalCount, data);
+			Integer[][] duration = DurationService.getDurationMatrix(totalCount, data);
 			SOLVE_LP_ORTOOLS ortools = new SOLVE_LP_ORTOOLS();
 			List<List<String>> routesAsString = ortools.SolveOrToolsLP(duration, data, vehicleCount, depots, depotCount);
 			List<MaintenanceRoute> list = new ArrayList<>();

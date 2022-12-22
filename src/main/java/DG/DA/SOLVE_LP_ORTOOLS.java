@@ -23,7 +23,7 @@ public class SOLVE_LP_ORTOOLS {
 
 	private static final Logger logger = Logger.getLogger(SOLVE_LP_ORTOOLS.class.getName());
 
-	public static List<List<String>> SolveOrToolsLP(Double[][] duration, List<MaintenanceWorkDTO>  workDTO,
+	public static List<List<String>> SolveOrToolsLP(Integer[][] duration, List<MaintenanceWorkDTO>  workDTO,
 			int vehicleCount, List<List<Integer>> depots,
 			int depotCount) {
 		Loader.loadNativeLibraries();
