@@ -25,23 +25,15 @@ public class MaintenanceController {
 	    	String type = routes.get(i).type;
 		    String vehicle = routes.get(i).vehicle;		    
 		    String order = routes.get(i).order;
-		    Double xCoordinates = routes.get(i).xCoordinates;
-		    Double yCoordinates = routes.get(i).xCoordinates;
+		    Double[] coordinates = routes.get(i).coordinates;
 		    test.put("type", type);
 		    test.put("vehicle", vehicle);
 		    test.put("order", order);
-		    test.put("xCoordinates", xCoordinates);
-		    test.put("yCoordinates", yCoordinates);
+		    test.put("coordinates", coordinates);
 		    map.put("features", test);
 	    }
 	    return map;
 	}
-	
-	@GetMapping("/employees2")
-	public String helloWorld()
-	 {	     // Print statement
-	     return "Hello World!";
-	 }
 	
 	
 }

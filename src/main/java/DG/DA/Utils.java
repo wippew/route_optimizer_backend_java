@@ -1,21 +1,9 @@
 package DG.DA;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
- 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import static DG.DA.MaintenanceService.getMaintenances;
@@ -23,83 +11,41 @@ import static DG.DA.MaintenanceService.getMaintenances;
 
 public class Utils {
 	
-	private String fileName = "Mobilenote.xls";
-	private String sheet = "Huolto";
-	private static String fileLocation = "C:\\Users\\Victor\\eclipse-workspace\\mavenproject\\src\\main\\java\\fi\\testsolver\\mavenproject\\Mobilenote.xls";
-	
 	public static List<MaintenanceWorkDTO> getDataForTasks(int numberOfTasks) throws IOException, InterruptedException {
-		Double depotFirstLatitude = 60.875438;
-		Double depotFirstLongitude = 23.252894;
-		String depotWaypoint = depotFirstLatitude.toString() + "," + depotFirstLongitude.toString();
+		Double[] depotCoordinates = new Double[2];
+		depotCoordinates[0] = 60.875438;
+		depotCoordinates[1] = 23.252894;
+		String depotWaypoint = depotCoordinates[0].toString() + "," + depotCoordinates[1].toString();
+		MaintenanceWorkDTO depotMaintenanceDTO = new MaintenanceWorkDTO(depotCoordinates, 0, "DEPOT0", depotWaypoint);
+		JSONArray jsonArray = getMaintenances();
+		ArrayList<MaintenanceWorkDTO> maintenanceWorkDTOS = populateMaintenancesFromJson(jsonArray);
+		maintenanceWorkDTOS.add(0, depotMaintenanceDTO);
 
-		return new ArrayList<>();
+		return maintenanceWorkDTOS;
 	}
-	
-	
-	public static List<Double> getXCoordinatesFromFile(String filePath) {
-	    File file = new File(filePath);
-	    List<Double> array = new ArrayList<Double>();
-	    try {
-	        FileInputStream inputStream = new FileInputStream(file);
-	        Workbook workBook = new HSSFWorkbook(inputStream);
-	        Sheet sheet = workBook.getSheetAt(0);
-        	int firstRow = sheet.getFirstRowNum();
-        	int lastRow = sheet.getLastRowNum();
-        	for (int index = firstRow + 1; index <= lastRow; index++) {
-        	    Row row = sheet.getRow(index);
-        	    Cell cell = row.getCell(35);
-        	    Double numericValue = cell.getNumericCellValue();
-        	    array.add(numericValue);
-        	}
-	        inputStream.close();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	    return array;
-	}
-	
-	public static List<Double> getYCoordinatesFromFile(String filePath) {
-	    File file = new File(filePath);
-	    List<Double> array = new ArrayList<Double>();
-	    try {
-	        FileInputStream inputStream = new FileInputStream(file);
-	        Workbook workBook = new HSSFWorkbook(inputStream);
-	        Sheet sheet = workBook.getSheetAt(0);
-        	int firstRow = sheet.getFirstRowNum();
-        	int lastRow = sheet.getLastRowNum();
-        	for (int index = firstRow + 1; index <= lastRow; index++) {
-        	    Row row = sheet.getRow(index);
-        	    Cell cell = row.getCell(36);
-        	    Double numericValue = cell.getNumericCellValue();
-        	    array.add(numericValue);
-        	}
-	        inputStream.close();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	    return array;
-	}
-	
-	public static List<String> getTypesAsStringFromFile(String filePath) {
-	    File file = new File(filePath);
-	    List<String> array = new ArrayList<String>();
-	    try {
-	        FileInputStream inputStream = new FileInputStream(file);
-	        Workbook workBook = new HSSFWorkbook(inputStream);
-	        Sheet sheet = workBook.getSheetAt(0);
-        	int firstRow = sheet.getFirstRowNum();
-        	int lastRow = sheet.getLastRowNum();
-        	for (int index = firstRow + 1; index <= lastRow; index++) {
-        	    Row row = sheet.getRow(index);
-        	    Cell cell = row.getCell(1);
-        	    String strValue = cell.getStringCellValue();
-        	    array.add(strValue);
-        	}
-	        inputStream.close();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	    return array;
+
+	private static ArrayList<MaintenanceWorkDTO> populateMaintenancesFromJson(JSONArray jsonArray) {
+		int nodeCount = 20;
+		ArrayList<MaintenanceWorkDTO> ret = new ArrayList<>();
+		for (int i = 0; i < nodeCount; i++) {
+			JSONObject obj = jsonArray.getJSONObject(i);
+			String status = obj.getString("extState");
+			if ((status.equals("Osoitettu") || status.equals("Avoin") || status.equals("Uusi")) && !obj.isNull("location")) {
+				JSONArray jsonCoordinates = obj.getJSONObject("location").getJSONArray("coordinates");
+				Double[] coordinates = new Double[2];
+				coordinates[0] = (double) jsonCoordinates.get(0);
+				coordinates[1] = (double) jsonCoordinates.get(1);
+				String type = obj.getJSONObject("workProperties").getJSONObject("laiteryhma").getString("value");
+				Integer demand = convertTypeToDemand(type);
+				String waypoint = coordinates[0].toString() + "," + coordinates[1].toString();
+				MaintenanceWorkDTO maintenanceWorkDTO = new MaintenanceWorkDTO(coordinates, demand, type, waypoint);
+				ret.add(maintenanceWorkDTO);
+			} else {
+				nodeCount++;
+			}
+		}
+
+		return ret;
 	}
 	
 	public static int convertTypeToDemand(String type) {
@@ -120,24 +66,9 @@ public class Utils {
 				return TypeConstants.KAAPIT_JA_KOJUT_12KK;
 			case "Liikennepaikkatarkastus 1v":
 				return TypeConstants.LIIKENNEPAIKKATARKASTUS_1V;
+			default:
+				return 60*60;
 		}
-		return 0;
-	}
-	
-	public static List<Integer> getDemandsFromFile(List<String> typesAsString) {
-		List<Integer> array = new ArrayList<>();
-		for (String str: typesAsString) {
-			int converted = convertTypeToDemand(str);
-			array.add(converted);
-		}
-		return array;
-	}
-	
-	public static void convertTM35FINToWGS84() {
-		//GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 3067);
-		//Point point = factory.createPoint(new Coordinate(333000, 6666000));
-		//Projector projector = Projector.get(EPSGSrsName.get(4326)); // target srid
-		//Point wgs84 = projector.project(point);
 	}
 	
 	public static List<String> replaceWithArrows(List<String> array) {

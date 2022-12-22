@@ -23,7 +23,7 @@ public class SOLVE_LP_ORTOOLS {
 
 	private static final Logger logger = Logger.getLogger(SOLVE_LP_ORTOOLS.class.getName());
 
-	public static List<List<String>> SolveOrToolsLP(Double[][] duration, int[] demand, String[] types,
+	public static List<List<String>> SolveOrToolsLP(Double[][] duration, List<MaintenanceWorkDTO>  workDTO,
 			int vehicleCount, List<List<Integer>> depots,
 			int depotCount) {
 		Loader.loadNativeLibraries();
@@ -137,7 +137,7 @@ public class SOLVE_LP_ORTOOLS {
 			MPConstraint constraint = model.makeConstraint(minTime, maxTime, "c6");
 			for (int i : allNodes) {
 				for (int j : allNodes) {
-					constraint.setCoefficient(x[i][j][k], (duration[i][j] + demand[j]));
+					constraint.setCoefficient(x[i][j][k], (duration[i][j] + workDTO.get(j).demand));
 				}
 			}
 		}
