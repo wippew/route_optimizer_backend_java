@@ -1,16 +1,12 @@
 package DG.DA;
 
-import org.springframework.web.bind.annotation.RequestBody;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @CrossOrigin
 @RestController
@@ -33,6 +29,11 @@ public class MaintenanceController {
 		    map.put("features", test);
 	    }
 	    return map;
+	}
+
+	@GetMapping("/getRoutes2")
+	public String getRoutes2() throws Exception {
+		return "ASDASDASD";
 	}
 	
 	

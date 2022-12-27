@@ -19,7 +19,12 @@ public class App {
 		for (int i = 0; i < depotCount; i++) {
 			depots.add(new ArrayList<Integer>());
 		}
+
+
 		depots.get(0).add(0);
+//		for (int i = 0; i < vehicleCount; i++) {
+//			depots.get(0).add(i);
+//		}
 //		depots.get(0).add(1);
 //		depots.get(1).add(2);
 //		depots.get(1).add(3);
@@ -28,7 +33,7 @@ public class App {
 		for (List<Integer> depot : depots) {
 			vehicleCount += depot.size();
 		}
-		int taskCount = 10;
+		int taskCount = 3;
 		int totalCount = depotCount + taskCount;
 		int timeOfWorkingDay = 6 * 3600;
 
