@@ -12,7 +12,7 @@ public class App {
 	
 	private static final Logger logger = Logger.getLogger(App.class.getName());
 	
-	public static List<MaintenanceRoute> runLPSolve() throws IOException, InterruptedException, URISyntaxException {
+	public static List<MaintenanceRoute> runLPSolve(int vehicleCount) throws IOException, InterruptedException, URISyntaxException {
 
 		int depotCount = 1;
 		List<List<Integer>> depots = new ArrayList<List<Integer>>(depotCount);
@@ -29,15 +29,14 @@ public class App {
 //		depots.get(1).add(2);
 //		depots.get(1).add(3);
 
-		int vehicleCount = 0;
 		for (List<Integer> depot : depots) {
 			vehicleCount += depot.size();
 		}
-		int taskCount = 3;
+		int taskCount = 4;
 		int totalCount = depotCount + taskCount;
-		int timeOfWorkingDay = 6 * 3600;
+		int timeOfWorkingDay = 16 * 3600;
 
-		List<MaintenanceWorkDTO> data = Utils.getDataForTasks(totalCount);
+		List<MaintenanceWorkDTO> data = Utils.getDataForTasks(taskCount);
 
 		boolean fetchNewDurations = true;
 		if (fetchNewDurations) {
@@ -48,10 +47,10 @@ public class App {
 			for (int i = 0; i < routesAsString.size(); i++) {
 				for (int j = 0; j < routesAsString.get(i).size(); j++) {
 					MaintenanceRoute maintenanceRoute = new MaintenanceRoute();
-					maintenanceRoute.type = data.get(i).type;
+					maintenanceRoute.type = data.get(j).type;
 					maintenanceRoute.vehicle = String.valueOf(i);
 					maintenanceRoute.order = String.valueOf(j);
-					maintenanceRoute.coordinates = data.get(i).coordinates;
+					maintenanceRoute.coordinates = data.get(j).coordinates;
 					list.add(maintenanceRoute);
 				}
 			}
