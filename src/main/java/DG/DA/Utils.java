@@ -20,7 +20,6 @@ public class Utils {
 		JSONArray jsonArray = getMaintenances();
 		ArrayList<MaintenanceWorkDTO> maintenanceWorkDTOS = populateMaintenancesFromJson(jsonArray, numberOfTasks);
 		maintenanceWorkDTOS.add(0, depotMaintenanceDTO);
-
 		return maintenanceWorkDTOS;
 	}
 

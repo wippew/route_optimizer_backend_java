@@ -21,17 +21,17 @@ public class App {
 		}
 
 
-		depots.get(0).add(0);
-//		for (int i = 0; i < vehicleCount; i++) {
-//			depots.get(0).add(i);
-//		}
+		//depots.get(0).add(0);
+		for (int i = 0; i < vehicleCount; i++) {
+			depots.get(0).add(i);
+		}
 //		depots.get(0).add(1);
 //		depots.get(1).add(2);
 //		depots.get(1).add(3);
 
-		for (List<Integer> depot : depots) {
-			vehicleCount += depot.size();
-		}
+//		for (List<Integer> depot : depots) {
+//			vehicleCount += depot.size();
+//		}
 		int taskCount = 4;
 		int totalCount = depotCount + taskCount;
 		int timeOfWorkingDay = 16 * 3600;
@@ -44,14 +44,26 @@ public class App {
 			SOLVE_LP_ORTOOLS ortools = new SOLVE_LP_ORTOOLS();
 			List<List<String>> routesAsString = ortools.SolveOrToolsLP(duration, data, vehicleCount, depots, depotCount);
 			List<MaintenanceRoute> list = new ArrayList<>();
+			int current = 0;
 			for (int i = 0; i < routesAsString.size(); i++) {
 				for (int j = 0; j < routesAsString.get(i).size(); j++) {
-					MaintenanceRoute maintenanceRoute = new MaintenanceRoute();
-					maintenanceRoute.type = data.get(j).type;
-					maintenanceRoute.vehicle = String.valueOf(i);
-					maintenanceRoute.order = String.valueOf(j);
-					maintenanceRoute.coordinates = data.get(j).coordinates;
-					list.add(maintenanceRoute);
+					// starting from depot
+					if (i != 0 && j == 0) {
+						MaintenanceRoute maintenanceRoute = new MaintenanceRoute();
+						maintenanceRoute.type = data.get(0).type;
+						maintenanceRoute.vehicle = String.valueOf(i);
+						maintenanceRoute.order = "0";
+						maintenanceRoute.coordinates = data.get(0).coordinates;
+						list.add(maintenanceRoute);
+					} else {
+						MaintenanceRoute maintenanceRoute = new MaintenanceRoute();
+						maintenanceRoute.type = data.get(current).type;
+						maintenanceRoute.vehicle = String.valueOf(i);
+						maintenanceRoute.order = String.valueOf(j);
+						maintenanceRoute.coordinates = data.get(current).coordinates;
+						list.add(maintenanceRoute);
+						current++;
+					}
 				}
 			}
 			return list;

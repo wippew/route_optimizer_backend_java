@@ -39,11 +39,6 @@ public class MaintenanceController {
 	    }
 	    return map;
 	}
-
-	@GetMapping("/getRoutes2")
-	public String getRoutes2() throws Exception {
-		return "ASDASDASD";
-	}
 	
 	
 }
