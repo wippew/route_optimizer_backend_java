@@ -44,9 +44,11 @@ public class App {
 			SOLVE_LP_ORTOOLS ortools = new SOLVE_LP_ORTOOLS();
 			List<List<String>> routesAsString = ortools.SolveOrToolsLP(duration, data, vehicleCount, depots, depotCount);
 			List<MaintenanceRoute> list = new ArrayList<>();
-			int current = 0;
 			for (int i = 0; i < routesAsString.size(); i++) {
 				for (int j = 0; j < routesAsString.get(i).size(); j++) {
+					String asd = routesAsString.get(i).get(j);
+					String asd2 = asd.split("_")[0];
+					int current = Integer.parseInt(asd2);
 					// starting from depot
 					if (i != 0 && j == 0) {
 						MaintenanceRoute maintenanceRoute = new MaintenanceRoute();
@@ -62,7 +64,6 @@ public class App {
 						maintenanceRoute.order = String.valueOf(j);
 						maintenanceRoute.coordinates = data.get(current).coordinates;
 						list.add(maintenanceRoute);
-						current++;
 					}
 				}
 			}
