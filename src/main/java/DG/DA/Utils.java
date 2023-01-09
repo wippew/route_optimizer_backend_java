@@ -13,8 +13,8 @@ public class Utils {
 	
 	public static List<MaintenanceWorkDTO> getDataForTasks(int numberOfTasks) throws IOException, InterruptedException {
 		Double[] depotCoordinates = new Double[2];
-		depotCoordinates[0] = 60.437520385889826;
-		depotCoordinates[1] = 22.338532504743725;
+		depotCoordinates[0] = 60.20673161432754;
+		depotCoordinates[1] = 24.878853391086857;
 		String depotWaypoint = depotCoordinates[0].toString() + "," + depotCoordinates[1].toString();
 		MaintenanceWorkDTO depotMaintenanceDTO = new MaintenanceWorkDTO(depotCoordinates, 0, "DEPOT0", depotWaypoint);
 		JSONArray jsonArray = getMaintenances();

@@ -7,12 +7,9 @@ import com.google.ortools.linearsolver.MPConstraint;
 import com.google.ortools.linearsolver.MPObjective;
 import com.google.ortools.linearsolver.MPSolver;
 import com.google.ortools.linearsolver.MPVariable;
-import com.google.ortools.sat.Literal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class SOLVE_LP_ORTOOLS {
@@ -29,7 +26,7 @@ public class SOLVE_LP_ORTOOLS {
 		Loader.loadNativeLibraries();
 		int numberOfNodes = duration[0].length;
 		double maxTime = 6 * 60 * 60;
-		double minTime = 5 * 60 * 60;
+		double minTime = 0 * 60 * 60;
 		int numberOfVehicles = vehicleCount;
 		int[] allNodes = IntStream.range(0, numberOfNodes).toArray();
 		int[] allTasks = IntStream.range(depotCount, numberOfNodes).toArray();

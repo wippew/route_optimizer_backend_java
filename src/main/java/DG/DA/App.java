@@ -19,8 +19,6 @@ public class App {
 		for (int i = 0; i < depotCount; i++) {
 			depots.add(new ArrayList<Integer>());
 		}
-
-
 		//depots.get(0).add(0);
 		for (int i = 0; i < vehicleCount; i++) {
 			depots.get(0).add(i);
