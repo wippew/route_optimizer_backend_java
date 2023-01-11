@@ -33,6 +33,9 @@ public class SOLVE_LP_ORTOOLS {
 		int[] allVehicles = IntStream.range(0, numberOfVehicles).toArray();
 		int[] allDepots = IntStream.range(0, depotCount).toArray();
 
+		int[] switches = {1};
+		int[] vehiclesThatCannotMaintainSwitches = {0};
+
 		MPSolver model = MPSolver.createSolver("SCIP");
 		model.enableOutput();
 
@@ -161,6 +164,18 @@ public class SOLVE_LP_ORTOOLS {
 			}
 		}
 
+		//constraint 7: Comptetency constraint for Structural devices and Switches
+		for(int i : switches) {
+			for (int k: vehiclesThatCannotMaintainSwitches) {
+				for (int j : allNodes) {
+					if (i != j) {
+						MPConstraint constraint7 = model.makeConstraint(0, 0, "c7");
+						constraint7.setCoefficient(x[i][j][k], 1);
+					}
+				}
+			}
+		}
+
 		MPObjective objective = model.objective();
 		for (int k : allVehicles) {
 			for (int i : allNodes) {
@@ -187,11 +202,10 @@ public class SOLVE_LP_ORTOOLS {
 
 		// Check that the problem has a feasible solution.
 		if (resultStatus == MPSolver.ResultStatus.OPTIMAL || resultStatus == MPSolver.ResultStatus.FEASIBLE) {
-			System.out.println("Total number of nodes visited: " + objective.value() + "/" + String.valueOf(numberOfNodes) + "\n");
+			System.out.println("Total number of nodes visited: " + objective.value() + "/" + String.valueOf(numberOfNodes + depotCount) + "\n");
 			for (int k : allVehicles) {
 				for (int i : allNodes) {
 					for (int j : allNodes) {
-
 						if (i != j && x[i][j][k].solutionValue() == 1.0) {
 							routesAsString.get(k).add(String.format("%d_%d", i, j));
 						}

@@ -42,8 +42,8 @@ public class MaintenanceService {
         json.put("systemStates", JSONObject.NULL);
         json.put("states", JSONObject.NULL);
         json.put("propertyRestrictions", propertyRestrictions);
-        json.put("deadlineEnd", "2022-12-15");
-        json.put("deadlineStart", "2022-12-08");
+        json.put("deadlineEnd", "2022-06-15");
+        json.put("deadlineStart", "2022-06-08");
         json.put("createdDateEnd", JSONObject.NULL);
         json.put("createdDateStart", JSONObject.NULL);
         json.put("freeText", "");

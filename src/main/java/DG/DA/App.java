@@ -2,10 +2,7 @@ package DG.DA;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class App {
@@ -30,11 +27,28 @@ public class App {
 //		for (List<Integer> depot : depots) {
 //			vehicleCount += depot.size();
 //		}
+
 		int taskCount = 4;
 		int totalCount = depotCount + taskCount;
 		int timeOfWorkingDay = 16 * 3600;
 
 		List<MaintenanceWorkDTO> data = Utils.getDataForTasks(taskCount);
+
+		// join tasks that have the same type and coordinates
+		for (int i = 0; i < data.size(); i++) {
+			MaintenanceWorkDTO currentFirstTask = data.get(i);
+			for (int j = 0; j < data.size(); j++) {
+				MaintenanceWorkDTO currentSecondTask = data.get(j);
+				if (i != j) {
+					if (Arrays.equals(currentFirstTask.coordinates,currentSecondTask.coordinates)) {
+						int newDemand = currentFirstTask.demand + currentSecondTask.demand;
+						data.get(i).demand = newDemand;
+						data.remove(j);
+						totalCount--;
+					}
+				}
+			}
+		}
 
 		boolean fetchNewDurations = true;
 		if (fetchNewDurations) {
