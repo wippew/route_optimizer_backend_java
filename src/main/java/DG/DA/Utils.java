@@ -11,24 +11,28 @@ import static DG.DA.MaintenanceService.getMaintenances;
 
 public class Utils {
 	
-	public static List<MaintenanceWorkDTO> getDataForTasks(int numberOfTasks) throws IOException, InterruptedException {
-
-		//depot 0 hardcoded
-		Double[] depot0Coordinates = new Double[2];
-		depot0Coordinates[0] = 60.20673161432754;
-		depot0Coordinates[1] = 24.878853391086857;
-		MaintenanceWorkDTO depot0MaintenanceDTO = createDepotDTO(depot0Coordinates, "DEPOT0");
-
-		// depot 1 hardcoded
-		Double[] depot1Coordinates = new Double[2];
-		depot1Coordinates[0] = 60.213267693282745;
-		depot1Coordinates[1] = 25.04715587870096;
-		MaintenanceWorkDTO depot1MaintenanceDTO = createDepotDTO(depot1Coordinates, "DEPOT1");
-
+	public static List<MaintenanceWorkDTO> getDataForTasks(int numberOfTasks, int depot0VehicleCount, int depot1VehicleCount) throws IOException, InterruptedException {
 		JSONArray jsonArray = getMaintenances();
 		ArrayList<MaintenanceWorkDTO> maintenanceWorkDTOS = populateMaintenancesFromJson(jsonArray, numberOfTasks);
-		maintenanceWorkDTOS.add(0, depot0MaintenanceDTO);
-		maintenanceWorkDTOS.add(1, depot1MaintenanceDTO);
+		int depotIndex = 0;
+		if (depot0VehicleCount > 0) {
+			//depot 0 hardcoded
+			Double[] depot0Coordinates = new Double[2];
+			depot0Coordinates[0] = 60.20673161432754;
+			depot0Coordinates[1] = 24.878853391086857;
+			MaintenanceWorkDTO depot0MaintenanceDTO = createDepotDTO(depot0Coordinates, "DEPOT0");
+			maintenanceWorkDTOS.add(depotIndex, depot0MaintenanceDTO);
+			depotIndex++;
+		}
+
+		if (depot1VehicleCount > 0) {
+			// depot 1 hardcoded
+			Double[] depot1Coordinates = new Double[2];
+			depot1Coordinates[0] = 60.213267693282745;
+			depot1Coordinates[1] = 25.04715587870096;
+			MaintenanceWorkDTO depot1MaintenanceDTO = createDepotDTO(depot1Coordinates, "DEPOT1");
+			maintenanceWorkDTOS.add(depotIndex, depot1MaintenanceDTO);
+		}
 		return maintenanceWorkDTOS;
 	}
 

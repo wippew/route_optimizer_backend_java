@@ -34,7 +34,12 @@ public class SOLVE_LP_ORTOOLS {
 		int[] allDepots = IntStream.range(0, depotCount).toArray();
 
 		int[] switches = {2};
-		int[] vehiclesThatCannotMaintainSwitches = {0};
+		ArrayList<Integer> vehiclesThatCannotMaintainSwitches = new ArrayList<>();
+
+		//check if we need to solve for one or two depots
+		if (depot1VehicleCount > 0) {
+			vehiclesThatCannotMaintainSwitches.add(0);
+		}
 
 		MPSolver model = MPSolver.createSolver("SCIP");
 		model.enableOutput();

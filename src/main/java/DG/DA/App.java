@@ -11,24 +11,39 @@ public class App {
 	
 	public static List<MaintenanceRoute> runLPSolve(int depot1VehicleCount, int depot2VehicleCount) throws IOException, InterruptedException, URISyntaxException {
 
-		int depotCount = depot1VehicleCount + depot2VehicleCount;
+		int depotCount = 0;
+		if (depot1VehicleCount > 0) {
+			depotCount++;
+		}
+		if (depot2VehicleCount > 0) {
+			depotCount++;
+		}
+
 		List<List<Integer>> depots = new ArrayList<List<Integer>>(depotCount);
+
 		for (int i = 0; i < depotCount; i++) {
 			depots.add(new ArrayList<Integer>());
 		}
 
-		for (int i = 0; i < depot1VehicleCount; i++) {
-			depots.get(0).add(i);
-		}
-
-		for (int i = depot1VehicleCount; i < depotCount; i++) {
-			depots.get(1).add(i);
+		if (depot1VehicleCount > 0) {
+			//add vehicles to depot0
+			for (int i = 0; i < depot1VehicleCount; i++) {
+				depots.get(0).add(i);
+			}
+			//add vehicles to depot1
+			for (int i = depot1VehicleCount; i < depotCount; i++) {
+				depots.get(1).add(i);
+			}
+		} else {
+			for (int i = 0; i < depot2VehicleCount; i++) {
+				depots.get(0).add(i);
+			}
 		}
 
 		int taskCount = 4;
 		int totalCount = depotCount + taskCount;
 
-		List<MaintenanceWorkDTO> data = Utils.getDataForTasks(taskCount);
+		List<MaintenanceWorkDTO> data = Utils.getDataForTasks(taskCount, depot1VehicleCount, depot2VehicleCount);
 
 		// join tasks that have the same type and coordinates
 		for (int i = depotCount; i < data.size(); i++) {
@@ -57,33 +72,13 @@ public class App {
 					String edgeAsSplit = routesAsString.get(i).get(j);
 					String edgeFirstNode = edgeAsSplit.split("_")[0];
 					int current = Integer.parseInt(edgeFirstNode);
-					// starting from depot
-					if (j == 0) {
+					MaintenanceRoute maintenanceRoute = new MaintenanceRoute();
+					maintenanceRoute.type = data.get(current).type;
+					maintenanceRoute.vehicle = String.valueOf(i);
+					maintenanceRoute.order = String.valueOf(j);
+					maintenanceRoute.coordinates = data.get(current).coordinates;
+					list.add(maintenanceRoute);
 
-						if (current == 0) {
-							MaintenanceRoute maintenanceRoute = new MaintenanceRoute();
-							maintenanceRoute.type = data.get(current).type;
-							maintenanceRoute.vehicle = String.valueOf(i);
-							maintenanceRoute.order = "0";
-							maintenanceRoute.coordinates = data.get(current).coordinates;
-							list.add(maintenanceRoute);
-						} else {
-							MaintenanceRoute maintenanceRoute = new MaintenanceRoute();
-							maintenanceRoute.type = data.get(current).type;
-							maintenanceRoute.vehicle = String.valueOf(i);
-							maintenanceRoute.order = "0";
-							maintenanceRoute.coordinates = data.get(current).coordinates;
-							list.add(maintenanceRoute);
-						}
-
-					} else {
-						MaintenanceRoute maintenanceRoute = new MaintenanceRoute();
-						maintenanceRoute.type = data.get(current).type;
-						maintenanceRoute.vehicle = String.valueOf(i);
-						maintenanceRoute.order = String.valueOf(j);
-						maintenanceRoute.coordinates = data.get(current).coordinates;
-						list.add(maintenanceRoute);
-					}
 				}
 			}
 			return list;
