@@ -21,19 +21,19 @@ public class SOLVE_LP_ORTOOLS {
 	private static final Logger logger = Logger.getLogger(SOLVE_LP_ORTOOLS.class.getName());
 
 	public static List<List<String>> SolveOrToolsLP(Integer[][] duration, List<MaintenanceWorkDTO>  workDTO,
-			int vehicleCount, List<List<Integer>> depots,
+			int depot1VehicleCount, int depot2VehicleCount, List<List<Integer>> depots,
 			int depotCount) {
 		Loader.loadNativeLibraries();
 		int numberOfNodes = duration[0].length;
 		double maxTime = 6 * 60 * 60;
 		double minTime = 0 * 60 * 60;
-		int numberOfVehicles = vehicleCount;
+		int numberOfVehicles = depot1VehicleCount + depot2VehicleCount;
 		int[] allNodes = IntStream.range(0, numberOfNodes).toArray();
 		int[] allTasks = IntStream.range(depotCount, numberOfNodes).toArray();
 		int[] allVehicles = IntStream.range(0, numberOfVehicles).toArray();
 		int[] allDepots = IntStream.range(0, depotCount).toArray();
 
-		int[] switches = {1};
+		int[] switches = {2};
 		int[] vehiclesThatCannotMaintainSwitches = {0};
 
 		MPSolver model = MPSolver.createSolver("SCIP");
@@ -191,7 +191,7 @@ public class SOLVE_LP_ORTOOLS {
 		//model.setTimeLimit(300 * 1000);
 
 		String test = model.exportModelAsLpFormat();
-		System.out.println(test);
+		//System.out.println(test);
 
 		MPSolver.ResultStatus resultStatus = model.solve();
 
@@ -220,18 +220,9 @@ public class SOLVE_LP_ORTOOLS {
 		System.out.println("the array 0 is hence: ");
 		System.out.println(Utils.orderCorrectly(routesAsString.get(0), "0"));
 
-		if (vehicleCount > 1) {
+		if (numberOfVehicles > 1) {
 			System.out.println("the array 1 is hence: ");
-			System.out.println(Utils.orderCorrectly(routesAsString.get(1), "0"));
-		}
-		if (vehicleCount > 2) {
-			System.out.println("the array 2 is hence: ");
-			System.out.println(Utils.orderCorrectly(routesAsString.get(2), "1"));
-		}
-
-		if (vehicleCount > 3) {
-			System.out.println("the array 3 is hence: ");
-			System.out.println(Utils.orderCorrectly(routesAsString.get(3), "1"));
+			System.out.println(Utils.orderCorrectly(routesAsString.get(1), "1"));
 		}
 		
 		return routesAsString;
