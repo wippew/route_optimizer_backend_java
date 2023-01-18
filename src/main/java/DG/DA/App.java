@@ -5,6 +5,8 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static DG.DA.Utils.testDBConnection;
+
 public class App {
 	
 	private static final Logger logger = Logger.getLogger(App.class.getName());
@@ -46,6 +48,8 @@ public class App {
 		int taskCount = 4;
 		int totalCount = depotCount + taskCount;
 
+		testDBConnection();
+
 		List<MaintenanceWorkDTO> data = Utils.getDataForTasks(taskCount, depot1VehicleCount, depot2VehicleCount);
 
 		// join tasks that have the same type and coordinates
@@ -64,7 +68,7 @@ public class App {
 			}
 		}
 
-		boolean fetchNewDurations = true;
+		boolean fetchNewDurations = false;
 		if (fetchNewDurations) {
 			Integer[][] duration = DurationService.getDurationMatrix(totalCount, data);
 			SOLVE_LP_ORTOOLS ortools = new SOLVE_LP_ORTOOLS();
