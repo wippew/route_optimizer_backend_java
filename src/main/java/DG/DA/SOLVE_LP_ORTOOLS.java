@@ -25,7 +25,7 @@ public class SOLVE_LP_ORTOOLS {
 			int depotCount) {
 		Loader.loadNativeLibraries();
 		int numberOfNodes = duration[0].length;
-		double maxTime = 6 * 60 * 60;
+		double maxTime = 12 * 60 * 60;
 		double minTime = 0 * 60 * 60;
 		int numberOfVehicles = depot1VehicleCount + depot2VehicleCount;
 		int[] allNodes = IntStream.range(0, numberOfNodes).toArray();
@@ -33,13 +33,13 @@ public class SOLVE_LP_ORTOOLS {
 		int[] allVehicles = IntStream.range(0, numberOfVehicles).toArray();
 		int[] allDepots = IntStream.range(0, depotCount).toArray();
 
-		int[] switches = {2};
-		ArrayList<Integer> vehiclesThatCannotMaintainSwitches = new ArrayList<>();
-
-		//check if we need to solve for one or two depots
-		if (depot1VehicleCount > 0) {
-			vehiclesThatCannotMaintainSwitches.add(0);
-		}
+//		int[] switches = {2};
+//		ArrayList<Integer> vehiclesThatCannotMaintainSwitches = new ArrayList<>();
+//
+//		//check if we need to solve for one or two depots
+//		if (depot1VehicleCount > 0) {
+//			vehiclesThatCannotMaintainSwitches.add(0);
+//		}
 
 		MPSolver model = MPSolver.createSolver("SCIP");
 		model.enableOutput();
@@ -170,16 +170,16 @@ public class SOLVE_LP_ORTOOLS {
 		}
 
 		//constraint 7: Comptetency constraint for Structural devices and Switches
-		for(int i : switches) {
-			for (int k: vehiclesThatCannotMaintainSwitches) {
-				for (int j : allNodes) {
-					if (i != j) {
-						MPConstraint constraint7 = model.makeConstraint(0, 0, "c7");
-						constraint7.setCoefficient(x[i][j][k], 1);
-					}
-				}
-			}
-		}
+//		for(int i : switches) {
+//			for (int k: vehiclesThatCannotMaintainSwitches) {
+//				for (int j : allNodes) {
+//					if (i != j) {
+//						MPConstraint constraint7 = model.makeConstraint(0, 0, "c7");
+//						constraint7.setCoefficient(x[i][j][k], 1);
+//					}
+//				}
+//			}
+//		}
 
 		MPObjective objective = model.objective();
 		for (int k : allVehicles) {
@@ -221,13 +221,35 @@ public class SOLVE_LP_ORTOOLS {
 			System.err.println("No solution found.");
 		}
 
-		// orderCorrectly takes and array and startDepot as arguments
-		System.out.println("the array 0 is hence: ");
-		System.out.println(Utils.orderCorrectly(routesAsString.get(0), "0"));
+		if (depot1VehicleCount > 0) {
 
-		if (numberOfVehicles > 1) {
-			System.out.println("the array 1 is hence: ");
-			System.out.println(Utils.orderCorrectly(routesAsString.get(1), "1"));
+			int current = 0;
+			for (int i = 0; i < depot1VehicleCount; i++) {
+				// orderCorrectly takes and array and startDepot as arguments
+				System.out.println("the array " + i + " is hence: ");
+				System.out.println(Utils.orderCorrectly(routesAsString.get(i), "0"));
+				current++;
+			}
+
+			for (int i = 0; i < depot2VehicleCount; i++) {
+				// orderCorrectly takes and array and startDepot as arguments
+				System.out.println("the array " + current + " is hence: ");
+				System.out.println(Utils.orderCorrectly(routesAsString.get(current), "1"));
+				current++;
+			}
+//			for (int i = 0; i < depot2VehicleCount; i++) {
+//				// orderCorrectly takes and array and startDepot as arguments
+//				System.out.println("the array " + current + " is hence: ");
+//				System.out.println(routesAsString.get(current));
+//				current++;
+//			}
+
+		} else {
+			for (int i = 0; i < depot2VehicleCount; i++) {
+				// orderCorrectly takes and array and startDepot as arguments
+				System.out.println("the array " + i + " is hence: ");
+				System.out.println(Utils.orderCorrectly(routesAsString.get(i), "0"));
+			}
 		}
 		
 		return routesAsString;

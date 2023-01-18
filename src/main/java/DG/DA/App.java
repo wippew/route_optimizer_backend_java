@@ -19,11 +19,14 @@ public class App {
 			depotCount++;
 		}
 
+
+
 		List<List<Integer>> depots = new ArrayList<List<Integer>>(depotCount);
 
 		for (int i = 0; i < depotCount; i++) {
 			depots.add(new ArrayList<Integer>());
 		}
+		int totalNumberOfVehicles = depot1VehicleCount + depot2VehicleCount;
 
 		if (depot1VehicleCount > 0) {
 			//add vehicles to depot0
@@ -31,7 +34,7 @@ public class App {
 				depots.get(0).add(i);
 			}
 			//add vehicles to depot1
-			for (int i = depot1VehicleCount; i < depotCount; i++) {
+			for (int i = depot1VehicleCount; i < totalNumberOfVehicles; i++) {
 				depots.get(1).add(i);
 			}
 		} else {
@@ -40,7 +43,7 @@ public class App {
 			}
 		}
 
-		int taskCount = 4;
+		int taskCount = 8;
 		int totalCount = depotCount + taskCount;
 
 		List<MaintenanceWorkDTO> data = Utils.getDataForTasks(taskCount, depot1VehicleCount, depot2VehicleCount);

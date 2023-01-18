@@ -1,6 +1,6 @@
 package DG.DA;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
@@ -125,7 +125,17 @@ public class Utils {
 		}
 		return retList;
 	}
-	
-	
+
+	public static void writeFile (String filename, int[] x) throws IOException{
+		ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(filename));
+		outputStream.writeObject(x);
+	}
+
+	public static int[] readFile (String filename) throws IOException, ClassNotFoundException {
+		ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename));
+		int[] x = (int[])inputStream.readObject();
+		return x;
+	}
+
 	
 }
