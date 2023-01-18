@@ -43,7 +43,7 @@ public class App {
 			}
 		}
 
-		int taskCount = 8;
+		int taskCount = 4;
 		int totalCount = depotCount + taskCount;
 
 		List<MaintenanceWorkDTO> data = Utils.getDataForTasks(taskCount, depot1VehicleCount, depot2VehicleCount);

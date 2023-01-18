@@ -182,21 +182,23 @@ public class SOLVE_LP_ORTOOLS {
 //		}
 
 		MPObjective objective = model.objective();
+		// driving duration - work done
 		for (int k : allVehicles) {
 			for (int i : allNodes) {
-				for (int j : allNodes) {
+				for (int j : allTasks) {
 					if (i != j) {
-						objective.setCoefficient(x[i][j][k], 1);
+						objective.setCoefficient(x[i][j][k], duration[i][j]-workDTO.get(j).demand);
 					}
 				}
 			}
 		}
-		objective.setMaximization();
+
+		objective.setMinimization();
 
 		//model.setTimeLimit(300 * 1000);
 
 		String test = model.exportModelAsLpFormat();
-		//System.out.println(test);
+		System.out.println(test);
 
 		MPSolver.ResultStatus resultStatus = model.solve();
 
