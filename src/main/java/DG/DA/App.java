@@ -5,8 +5,6 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static DG.DA.Utils.testDBConnection;
-
 public class App {
 	
 	private static final Logger logger = Logger.getLogger(App.class.getName());
@@ -20,9 +18,6 @@ public class App {
 		if (depot2VehicleCount > 0) {
 			depotCount++;
 		}
-
-
-
 		List<List<Integer>> depots = new ArrayList<List<Integer>>(depotCount);
 
 		for (int i = 0; i < depotCount; i++) {
@@ -45,30 +40,35 @@ public class App {
 			}
 		}
 
-		int taskCount = 4;
+		int taskCount = 20;
 		int totalCount = depotCount + taskCount;
 
-		testDBConnection();
 
 		List<MaintenanceWorkDTO> data = Utils.getDataForTasks(taskCount, depot1VehicleCount, depot2VehicleCount);
 
-		// join tasks that have the same type and coordinates
-		for (int i = depotCount; i < data.size(); i++) {
+//		List<MaintenanceWorkDTO> joinedData = new ArrayList<>();
+//		for (int i = 0; i < depotCount; i++) {
+//			joinedData.add(data.get(i));
+//		}
+		// join tasks that have the same coordinates
+		for (int i = depotCount; i < totalCount; i++) {
 			MaintenanceWorkDTO currentFirstTask = data.get(i);
-			for (int j = depotCount; j < data.size(); j++) {
-				MaintenanceWorkDTO currentSecondTask = data.get(j);
+			for (int j = i; j < totalCount; j++) {
 				if (i != j) {
-					if (Arrays.equals(currentFirstTask.coordinates,currentSecondTask.coordinates)) {
+					MaintenanceWorkDTO currentSecondTask = data.get(j);
+					if (Arrays.equals(currentFirstTask.coordinates, currentSecondTask.coordinates)) {
 						int newDemand = currentFirstTask.demand + currentSecondTask.demand;
-						data.get(i).demand = newDemand;
-						data.remove(j);
+						currentFirstTask.demand = newDemand;
+						data.remove(currentSecondTask);
 						totalCount--;
+						j = i;
 					}
 				}
 			}
+			//joinedData.add(currentFirstTask);
 		}
 
-		boolean fetchNewDurations = false;
+		boolean fetchNewDurations = true;
 		if (fetchNewDurations) {
 			Integer[][] duration = DurationService.getDurationMatrix(totalCount, data);
 			SOLVE_LP_ORTOOLS ortools = new SOLVE_LP_ORTOOLS();

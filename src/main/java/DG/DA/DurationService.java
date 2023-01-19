@@ -22,6 +22,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import static DG.DA.DBUtils.checkIfHereResultExistsInDB;
+import static DG.DA.DBUtils.saveHereResultToDB;
+
 public class DurationService {
 	private static String HERE_URL = "https://route.api.here.com/routing/7.2/calculateroute.json";
 
@@ -30,10 +33,19 @@ public class DurationService {
 		for (int i = 0; i < totalNodes; i++) {
 			for (int j = 0; j < totalNodes; j++) {
 				if (i != j) {
-					String waypoint0 = data.get(i).waypoint;
-					String waypoint1 = data.get(j).waypoint;
-					array[i][j] = sendHttpRequest(waypoint0, waypoint1);
-					System.out.println(i);
+
+					String waypointA = data.get(i).waypoint;
+					String waypointB = data.get(j).waypoint;
+					int dbEntryDuration = checkIfHereResultExistsInDB(waypointA, waypointB);
+					if (dbEntryDuration > 0) {
+						array[i][j] = dbEntryDuration;
+					} else {
+						int driveDuration = sendHttpRequest(waypointA, waypointB);
+						array[i][j] = driveDuration;
+						System.out.println(i + "->" + j);
+						saveHereResultToDB(waypointA, waypointB, driveDuration);
+					}
+
 				} else {
 					array[i][j] = 0;
 				}

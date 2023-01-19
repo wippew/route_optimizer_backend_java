@@ -11,29 +11,6 @@ import static DG.DA.MaintenanceService.getMaintenances;
 
 
 public class Utils {
-
-	static final String DB_URL = "jdbc:postgresql://192.168.50.100:5432/";
-	static final String USER = "optimointi";
-	static final String PASS = "optimointi1";
-	static final String QUERY = "SELECT * FROM public.here_sijainnit";
-
-	public static void testDBConnection() {
-
-		try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(QUERY);
-		) {
-			while(rs.next()){
-				//Display values
-				System.out.print("ID: " + rs.getInt("id"));
-				System.out.print(", Age: " + rs.getInt("age"));
-				System.out.print(", First: " + rs.getString("first"));
-				System.out.println(", Last: " + rs.getString("last"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	public static List<MaintenanceWorkDTO> getDataForTasks(int numberOfTasks, int depot0VehicleCount, int depot1VehicleCount) throws IOException, InterruptedException {
 		JSONArray jsonArray = getMaintenances();
@@ -149,17 +126,5 @@ public class Utils {
 		}
 		return retList;
 	}
-
-	public static void writeFile (String filename, int[] x) throws IOException{
-		ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(filename));
-		outputStream.writeObject(x);
-	}
-
-	public static int[] readFile (String filename) throws IOException, ClassNotFoundException {
-		ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename));
-		int[] x = (int[])inputStream.readObject();
-		return x;
-	}
-
 	
 }

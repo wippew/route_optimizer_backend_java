@@ -198,7 +198,7 @@ public class SOLVE_LP_ORTOOLS {
 		//model.setTimeLimit(300 * 1000);
 
 		String test = model.exportModelAsLpFormat();
-		System.out.println(test);
+		//System.out.println(test);
 
 		MPSolver.ResultStatus resultStatus = model.solve();
 
@@ -239,12 +239,6 @@ public class SOLVE_LP_ORTOOLS {
 				System.out.println(Utils.orderCorrectly(routesAsString.get(current), "1"));
 				current++;
 			}
-//			for (int i = 0; i < depot2VehicleCount; i++) {
-//				// orderCorrectly takes and array and startDepot as arguments
-//				System.out.println("the array " + current + " is hence: ");
-//				System.out.println(routesAsString.get(current));
-//				current++;
-//			}
 
 		} else {
 			for (int i = 0; i < depot2VehicleCount; i++) {
