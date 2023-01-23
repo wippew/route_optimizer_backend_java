@@ -22,14 +22,28 @@ public class MaintenanceService {
     }
 
     public static JSONArray getMaintenances() throws IOException {
-        var featureTypes = new String[1];
+        JSONObject jsonObject = populateJsonObject();
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+
+        HttpPost request = new HttpPost("http://ned.geometrix.fi/to/REST/v1/tasks/filter");
+        StringEntity params = new StringEntity(jsonObject.toString());
+        request.addHeader("content-type", "application/json");
+        request.addHeader("Authorization", getBasicAuthenticationHeader("grkrail.testi", "testi1"));
+        request.setEntity(params);
+        CloseableHttpResponse response = httpClient.execute(request);
+        String JSONString = EntityUtils.toString(response.getEntity(),
+                "UTF-8");
+        JSONArray jsonArray = new JSONArray(JSONString);
+        return jsonArray;
+    }
+
+    private static JSONObject populateJsonObject() {
+        String[] featureTypes = new String[1];
         featureTypes[0] = "wfs.huolto";
-        var propertyRestrictions = new ArrayList<>();
-        var orderMap = new HashMap<String, String>() {{
+        HashMap<String, String> orderMap = new HashMap<String, String>() {{
             put("sortOrder", "DESC");
             put("propertyName", "createdDate");
         }};
-
         JSONObject json = new JSONObject();
         json.put("someKey", "someValue");
         json.put("order", orderMap);
@@ -42,7 +56,7 @@ public class MaintenanceService {
         json.put("priorities", JSONObject.NULL);
         json.put("systemStates", JSONObject.NULL);
         json.put("states", JSONObject.NULL);
-        json.put("propertyRestrictions", propertyRestrictions);
+        json.put("propertyRestrictions", new ArrayList<>());
         json.put("deadlineEnd", "2022-06-15");
         json.put("deadlineStart", "2022-06-08");
         json.put("createdDateEnd", JSONObject.NULL);
@@ -50,18 +64,7 @@ public class MaintenanceService {
         json.put("freeText", "");
         json.put("featureTypes", featureTypes);
 
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-
-        HttpPost request = new HttpPost("http://ned.geometrix.fi/to/REST/v1/tasks/filter");
-        StringEntity params = new StringEntity(json.toString());
-        request.addHeader("content-type", "application/json");
-        request.addHeader("Authorization", getBasicAuthenticationHeader("grkrail.testi", "testi1"));
-        request.setEntity(params);
-        CloseableHttpResponse response = httpClient.execute(request);
-        String JSONString = EntityUtils.toString(response.getEntity(),
-                "UTF-8");
-        JSONArray jsonArray = new JSONArray(JSONString);
-        return jsonArray;
+        return json;
     }
 }
 
