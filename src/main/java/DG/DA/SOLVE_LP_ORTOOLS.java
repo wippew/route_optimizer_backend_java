@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static DG.DA.Utils.printRoutesToSystemOutput;
+
 public class SOLVE_LP_ORTOOLS {
 
 	public void SOLVE_LP_ORTOOLS() {
@@ -25,6 +27,7 @@ public class SOLVE_LP_ORTOOLS {
 			int depotCount) {
 		Loader.loadNativeLibraries();
 		int numberOfNodes = duration[0].length;
+		// Minimum and maximum working day's time
 		double maxTime = 12 * 60 * 60;
 		double minTime = 0 * 60 * 60;
 		int numberOfVehicles = depot1VehicleCount + depot2VehicleCount;
@@ -33,6 +36,7 @@ public class SOLVE_LP_ORTOOLS {
 		int[] allVehicles = IntStream.range(0, numberOfVehicles).toArray();
 		int[] allDepots = IntStream.range(0, depotCount).toArray();
 
+		// Populate this array with cars that cannot maintain switches, only needed when Safety device
 //		int[] switches = {2};
 //		ArrayList<Integer> vehiclesThatCannotMaintainSwitches = new ArrayList<>();
 //
@@ -82,7 +86,7 @@ public class SOLVE_LP_ORTOOLS {
 			}
 		}
 
-		// constraint 3: depart from own depot
+		// constraint 3: depart from own depot and return to own depot
 		logger.info("Creating " + String.valueOf(numberOfNodes) + "Constraint 3.1....");
 		for (int i : allDepots) {
 			List<Integer> cars = depots.get(i);
@@ -99,7 +103,7 @@ public class SOLVE_LP_ORTOOLS {
 			}
 		}
 
-		// constraint 4: only routes starting from a group's own depot a
+		// constraint 4: only routes starting from a group's own depot are permitted
 		logger.info("Creating Constraint 4...");
 		for (int depotIndex : allDepots) {
 			List<Integer> cars = depots.get(depotIndex);
@@ -120,7 +124,7 @@ public class SOLVE_LP_ORTOOLS {
 			}
 		}
 
-		// constraint 5: number of vehicles in and out of a tasks's location stays the
+		// constraint 5: number of vehicles in and out of a task's location stays the
 		// same
 		logger.info("Creating Constraint 5...");
 		for (int k : allVehicles) {
@@ -182,7 +186,7 @@ public class SOLVE_LP_ORTOOLS {
 //		}
 
 		MPObjective objective = model.objective();
-		// driving duration - work done
+		//Minimize driving duration - work done
 		for (int k : allVehicles) {
 			for (int i : allNodes) {
 				for (int j : allTasks) {
@@ -192,11 +196,8 @@ public class SOLVE_LP_ORTOOLS {
 				}
 			}
 		}
-
 		objective.setMinimization();
-
 		//model.setTimeLimit(300 * 1000);
-
 		String test = model.exportModelAsLpFormat();
 		//System.out.println(test);
 
@@ -223,30 +224,7 @@ public class SOLVE_LP_ORTOOLS {
 			System.err.println("No solution found.");
 		}
 
-		if (depot1VehicleCount > 0) {
-
-			int current = 0;
-			for (int i = 0; i < depot1VehicleCount; i++) {
-				// orderCorrectly takes and array and startDepot as arguments
-				System.out.println("the array " + i + " is hence: ");
-				System.out.println(Utils.orderCorrectly(routesAsString.get(i), "0"));
-				current++;
-			}
-
-			for (int i = 0; i < depot2VehicleCount; i++) {
-				// orderCorrectly takes and array and startDepot as arguments
-				System.out.println("the array " + current + " is hence: ");
-				System.out.println(Utils.orderCorrectly(routesAsString.get(current), "1"));
-				current++;
-			}
-
-		} else {
-			for (int i = 0; i < depot2VehicleCount; i++) {
-				// orderCorrectly takes and array and startDepot as arguments
-				System.out.println("the array " + i + " is hence: ");
-				System.out.println(Utils.orderCorrectly(routesAsString.get(i), "0"));
-			}
-		}
+		printRoutesToSystemOutput(depot1VehicleCount, depot2VehicleCount, routesAsString);
 		
 		return routesAsString;
 	}

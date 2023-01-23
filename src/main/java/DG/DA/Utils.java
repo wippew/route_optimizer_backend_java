@@ -3,7 +3,10 @@ package DG.DA;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import com.google.ortools.linearsolver.MPSolver;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,38 +14,61 @@ import static DG.DA.MaintenanceService.getMaintenances;
 
 
 public class Utils {
-	
+
+	public static void printRoutesToSystemOutput(int depot1VehicleCount, int depot2VehicleCount, List<List<String>> routesAsString) {
+		if (depot1VehicleCount > 0) {
+
+			int current = 0;
+			for (int i = 0; i < depot1VehicleCount; i++) {
+				// orderCorrectly takes and array and startDepot as arguments
+				System.out.println("the array " + i + " is hence: ");
+				System.out.println(Utils.orderCorrectly(routesAsString.get(i), "0"));
+				current++;
+			}
+
+			for (int i = 0; i < depot2VehicleCount; i++) {
+				// orderCorrectly takes and array and startDepot as arguments
+				System.out.println("the array " + current + " is hence: ");
+				System.out.println(Utils.orderCorrectly(routesAsString.get(current), "1"));
+				current++;
+			}
+
+		} else {
+			for (int i = 0; i < depot2VehicleCount; i++) {
+				// orderCorrectly takes and array and startDepot as arguments
+				System.out.println("the array " + i + " is hence: ");
+				System.out.println(Utils.orderCorrectly(routesAsString.get(i), "0"));
+			}
+		}
+	}
+
+
 	public static List<MaintenanceWorkDTO> getDataForTasks(int numberOfTasks, int depot0VehicleCount, int depot1VehicleCount) throws IOException, InterruptedException {
 		JSONArray jsonArray = getMaintenances();
 		ArrayList<MaintenanceWorkDTO> maintenanceWorkDTOS = populateMaintenancesFromJson(jsonArray, numberOfTasks);
 		int depotIndex = 0;
 		if (depot0VehicleCount > 0) {
-			//depot 0 hardcoded
-			Double[] depot0Coordinates = new Double[2];
-			depot0Coordinates[0] = 60.20673161432754;
-			depot0Coordinates[1] = 24.878853391086857;
+			Double[] depot0Coordinates = LocationConstants.depot0Coordinates;
 			MaintenanceWorkDTO depot0MaintenanceDTO = createDepotDTO(depot0Coordinates, "DEPOT0");
 			maintenanceWorkDTOS.add(depotIndex, depot0MaintenanceDTO);
 			depotIndex++;
 		}
-
 		if (depot1VehicleCount > 0) {
-			// depot 1 hardcoded
-			Double[] depot1Coordinates = new Double[2];
-			depot1Coordinates[0] = 60.213267693282745;
-			depot1Coordinates[1] = 25.04715587870096;
+			Double[] depot1Coordinates = LocationConstants.depot1Coordinates;
 			MaintenanceWorkDTO depot1MaintenanceDTO = createDepotDTO(depot1Coordinates, "DEPOT1");
 			maintenanceWorkDTOS.add(depotIndex, depot1MaintenanceDTO);
 		}
 		return maintenanceWorkDTOS;
 	}
 
+	// method to create a depot MaintenanceWorkDTO
 	public static MaintenanceWorkDTO createDepotDTO(Double[] depotCoordinates, String depotName) {
 		String depotWaypoint = depotCoordinates[0].toString() + "," + depotCoordinates[1].toString();
 		MaintenanceWorkDTO depotMaintenanceDTO = new MaintenanceWorkDTO(depotCoordinates, 0, depotName, depotWaypoint);
 		return depotMaintenanceDTO;
 	}
 
+	// created MaintenanceWorkDTOs out of received maintenance data
 	private static ArrayList<MaintenanceWorkDTO> populateMaintenancesFromJson(JSONArray jsonArray, int numberOfTasks) {
 		int nodeCount = numberOfTasks;
 		ArrayList<MaintenanceWorkDTO> ret = new ArrayList<>();
@@ -66,7 +92,8 @@ public class Utils {
 
 		return ret;
 	}
-	
+
+	// method that converts a type to a certain estimated maintenance duration
 	public static int convertTypeToDemand(String type) {
 		switch(type) {
 			case "Rumputarkastus 1v":
@@ -89,7 +116,7 @@ public class Utils {
 				return 60*60;
 		}
 	}
-	
+	// replaces the underscores in the optimized routes to arrows for clarity's sake
 	public static List<String> replaceWithArrows(List<String> array) {
 		List<String> ret = new ArrayList<>();
 		for (String str: array) {
@@ -98,7 +125,7 @@ public class Utils {
 		return ret;
 	}
 	
-	
+	//orders the route to a more easily readable form, starting and ending at depot
 	public static List<String> orderCorrectly(List<String> array, String startDepot) {
 		List<String> ret = new ArrayList<>();
 		String lastEnd = startDepot;
@@ -111,7 +138,8 @@ public class Utils {
 		ret = replaceWithArrows(ret);
 		return ret;
 	}
-	
+
+	//used by method above
 	public static List<String> getNextInOrder(List<String> array, String lastEnd) {
 		List<String> retList = new ArrayList<>();
 		for (String i : array) {
@@ -126,5 +154,82 @@ public class Utils {
 		}
 		return retList;
 	}
-	
+
+	public static int calculateDepotCount(int depot1VehicleCount, int depot2VehicleCount, int depotCount) {
+		if (depot1VehicleCount > 0) {
+			depotCount++;
+		}
+		if (depot2VehicleCount > 0) {
+			depotCount++;
+		}
+		return depotCount;
+	}
+
+	public static List<List<Integer>> createDepotLists(int depotCount) {
+		List<List<Integer>> depots = new ArrayList<List<Integer>>(depotCount);
+
+		for (int i = 0; i < depotCount; i++) {
+			depots.add(new ArrayList<Integer>());
+		}
+		return depots;
+	}
+
+	public static void populateDepotsWithVehicles(int depot1VehicleCount, int depot2VehicleCount, List<List<Integer>> depots) {
+		int totalNumberOfVehicles = depot1VehicleCount + depot2VehicleCount;
+
+		if (depot1VehicleCount > 0) {
+			//add vehicles to depot0
+			for (int i = 0; i < depot1VehicleCount; i++) {
+				depots.get(0).add(i);
+			}
+			//add vehicles to depot1
+			for (int i = depot1VehicleCount; i < totalNumberOfVehicles; i++) {
+				depots.get(1).add(i);
+			}
+		} else {
+			for (int i = 0; i < depot2VehicleCount; i++) {
+				depots.get(0).add(i);
+			}
+		}
+	}
+
+	public static List<MaintenanceWorkDTO>  joinTasksWithSameCoordinates(int depotCount, int totalCount, List<MaintenanceWorkDTO> data) {
+		// join tasks that have the same coordinates
+		for (int i = depotCount; i < totalCount; i++) {
+			MaintenanceWorkDTO currentFirstTask = data.get(i);
+			for (int j = i; j < totalCount; j++) {
+				if (i != j) {
+					MaintenanceWorkDTO currentSecondTask = data.get(j);
+					if (Arrays.equals(currentFirstTask.coordinates, currentSecondTask.coordinates)) {
+						int newDemand = currentFirstTask.demand + currentSecondTask.demand;
+						currentFirstTask.demand = newDemand;
+						data.remove(currentSecondTask);
+						totalCount--;
+						j = i;
+					}
+				}
+			}
+			//joinedData.add(currentFirstTask);
+		}
+		return data;
+	}
+
+	public static List<MaintenanceRoute> populateMaintenanceRoutes(List<List<String>> routesAsString, List<MaintenanceWorkDTO> data) {
+		List<MaintenanceRoute> list = new ArrayList<>();
+		for (int i = 0; i < routesAsString.size(); i++) {
+			for (int j = 0; j < routesAsString.get(i).size(); j++) {
+				String edgeAsSplit = routesAsString.get(i).get(j);
+				String edgeFirstNode = edgeAsSplit.split("_")[0];
+				int current = Integer.parseInt(edgeFirstNode);
+				MaintenanceRoute maintenanceRoute = new MaintenanceRoute();
+				maintenanceRoute.type = data.get(current).type;
+				maintenanceRoute.vehicle = String.valueOf(i);
+				maintenanceRoute.order = String.valueOf(j);
+				maintenanceRoute.coordinates = data.get(current).coordinates;
+				list.add(maintenanceRoute);
+
+			}
+		}
+		return list;
+	}
 }

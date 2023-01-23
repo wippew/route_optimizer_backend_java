@@ -19,23 +19,18 @@ public class MaintenanceController {
 		List<MaintenanceRoute> routes = App.runLPSolve(depot1VehicleCountAsNumber, depot2VehicleCountAsNumber);
 	    HashMap<String, List<Map<String, Object>>> map = new HashMap<>();
 	    for (int i = 0; i < routes.size(); i++) {
-	    	Map<String, Object> test = new HashMap<>();
-	    	String type = routes.get(i).type;
-		    String vehicle = routes.get(i).vehicle;		    
-		    String order = routes.get(i).order;
-		    Double[] coordinates = routes.get(i).coordinates;
-		    test.put("type", type);
-		    test.put("vehicle", vehicle);
-		    test.put("order", order);
-		    test.put("coordinates", coordinates);
-		    var array = new ArrayList<Map<String, Object>>();
-			array.add(test);
+	    	Map<String, Object> task = new HashMap<>();
+			task.put("type", routes.get(i).type);
+			task.put("vehicle", routes.get(i).vehicle);
+			task.put("order", routes.get(i).order);
+			task.put("coordinates", routes.get(i).coordinates);
 		    if (map.containsKey("features")) {
-		    	map.get("features").add(test);
+		    	map.get("features").add(task);
 			} else {
+				ArrayList<Map<String, Object>> array = new ArrayList<Map<String, Object>>();
+				array.add(task);
 				map.put("features", array);
 			}
-
 	    }
 	    return map;
 	}

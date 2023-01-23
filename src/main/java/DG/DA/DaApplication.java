@@ -11,10 +11,7 @@ import java.net.URISyntaxException;
 
 @SpringBootApplication
 public class DaApplication {
-
     public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {
         SpringApplication.run(DaApplication.class, args);
     }
-
-
 }
