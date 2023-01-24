@@ -106,12 +106,8 @@ public class Utils {
                 return TypeConstants.OPASTINHUOLTO_12KK;
             case "Akselinlaskijahuolto 12 kk":
                 return TypeConstants.AKSELINLASKIJAHUOLTO_12KK;
-            case "Kävelytarkastus 1 v kevät":
-                return TypeConstants.KAVELYTARKASTUS_1V_KEVAT;
             case "Kaapit ja kojut 12kk":
                 return TypeConstants.KAAPIT_JA_KOJUT_12KK;
-            case "Liikennepaikkatarkastus 1v":
-                return TypeConstants.LIIKENNEPAIKKATARKASTUS_1V;
             default:
                 return 60 * 60;
         }
