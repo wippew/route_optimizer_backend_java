@@ -33,7 +33,6 @@ public class DurationService {
 		for (int i = 0; i < totalNodes; i++) {
 			for (int j = 0; j < totalNodes; j++) {
 				if (i != j) {
-
 					String waypointA = data.get(i).waypoint;
 					String waypointB = data.get(j).waypoint;
 					int dbEntryDuration = checkIfHereResultExistsInDB(waypointA, waypointB);

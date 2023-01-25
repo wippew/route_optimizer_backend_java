@@ -15,14 +15,16 @@ public class App {
         List<List<Integer>> depots = createDepotLists(depotCount);
         populateDepotsWithVehicles(depot1VehicleCount, depot2VehicleCount, depots);
 
-        // how many total tasks for the algorithm to choose from
+        // how many tasks for the algorithm to choose from
         int taskCount = ControlConstants.taskCount;
-        int totalCount = depotCount + taskCount;
 
         // Creates DTOs for Tasks
         List<MaintenanceWorkDTO> data = Utils.getDataForTasks(taskCount, depot1VehicleCount, depot2VehicleCount);
         // Join tasks with precisely the same coordinates
-        data = joinTasksWithSameCoordinates(depotCount, totalCount, data);
+        data = joinTasksWithSameCoordinates(depotCount, depotCount + taskCount, data);
+
+        // total number of nodes
+        int totalCount = data.size();
 
         // bit to control wheter new driving durations should be fetched at all
         boolean fetchNewDurations = true;
