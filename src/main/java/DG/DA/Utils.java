@@ -76,7 +76,9 @@ public class Utils {
         for (int i = 0; i < nodeCount; i++) {
             JSONObject obj = jsonArray.getJSONObject(i);
             String status = obj.getString("extState");
-            if ((status.equals("Osoitettu") || status.equals("Avoin") || status.equals("Uusi")) && !obj.isNull("location")) {
+            //String responsibilityArea = obj.getJSONObject("workProperties").getJSONObject("vastuualue").getString("value");
+            if ((status.equals("Osoitettu") || status.equals("Avoin") || status.equals("Uusi"))
+                    && !obj.isNull("location") ) {
                 JSONArray jsonCoordinates = obj.getJSONObject("location").getJSONArray("coordinates");
                 Double[] coordinates = new Double[2];
                 coordinates[0] = (double) jsonCoordinates.get(1);
@@ -97,19 +99,22 @@ public class Utils {
     // method that converts a type to a certain estimated maintenance duration
     public static int convertTypeToDemand(String type) {
         switch (type) {
-            case "Rumputarkastus 1v":
+            case "RUMMUT":
                 return TypeConstants.RUMPUTARKASTUS_1V;
-            case "Siltatarkastus 1v":
+            case "SILLAT":
                 return TypeConstants.SILTATARKASTUS_1V;
-            case "Vaihde 2v huolto":
+            case "VAIHTEET":
                 return TypeConstants.VAIHDE_2V_HUOLTO;
-            case "Opastinhuolto 12kk":
+            case "OPASTIN":
                 return TypeConstants.OPASTINHUOLTO_12KK;
-            case "Akselinlaskijahuolto 12 kk":
+            case "AKSELINLASKIJA":
                 return TypeConstants.AKSELINLASKIJAHUOLTO_12KK;
-            case "Kaapit ja kojut 12kk":
-                return TypeConstants.KAAPIT_JA_KOJUT_12KK;
+            case "RAIDEVIRTAPIIRIT":
+                return TypeConstants.RAIDEVIRTAPIIRIHUOLLOT_12KK;
+            case "ASETINLAITE":
+                return TypeConstants.ASETINLAITE;
             default:
+                System.out.print("OBSERVE A NEW TYPE NEEDS TO BE ADDED!!!");
                 return 60 * 60;
         }
     }
