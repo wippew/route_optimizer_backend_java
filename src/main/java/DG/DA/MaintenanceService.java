@@ -21,6 +21,7 @@ public class MaintenanceService {
         return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
     }
 
+    //gets the maintenances from tyonohjaus api
     public static JSONArray getMaintenances() throws IOException {
         JSONObject jsonObject = populateJsonObject();
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();

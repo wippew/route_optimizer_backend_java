@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 
 import static DG.DA.Utils.printRoutesToSystemOutput;
 
+
+// class that solves the problem as an integer programming problem, and returns the optimal routes
 public class SolveWithORTools {
 
 	public void SolveWithORTools() {

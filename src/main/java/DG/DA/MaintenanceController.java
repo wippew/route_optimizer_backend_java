@@ -11,6 +11,7 @@ import java.util.Map;
 @RestController
 public class MaintenanceController {
 
+	// controller interface used by the current frontend to input the number of vehicles in respective depots
 	@GetMapping("/getRoutes")
 	public HashMap<String, List<Map<String, Object>>> getRoutes(@RequestParam("depot1VehicleCount") String depot1VehicleCount,
 																@RequestParam("depot2VehicleCount") String depot2VehicleCount) throws Exception {

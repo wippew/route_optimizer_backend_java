@@ -28,6 +28,7 @@ import static DG.DA.DBUtils.saveHereResultToDB;
 public class DurationService {
 	private static String HERE_URL = "https://route.api.here.com/routing/7.2/calculateroute.json";
 
+	// fetch the driving duration between each node, first check in db if the edge has been saved, otherwise fetch from HERE.
 	public static Integer[][] getDurationMatrix(int totalNodes, List<MaintenanceWorkDTO> data) throws IOException, URISyntaxException {
 		Integer[][] array = new Integer[totalNodes][totalNodes];
 		for (int i = 0; i < totalNodes; i++) {

@@ -15,6 +15,7 @@ import static DG.DA.MaintenanceService.getMaintenances;
 
 public class Utils {
 
+    // prints the optimal routes to System output in a human readable form
     public static void printRoutesToSystemOutput(int depot1VehicleCount, int depot2VehicleCount, List<List<String>> routesAsString) {
         if (depot1VehicleCount > 0) {
 
@@ -42,7 +43,7 @@ public class Utils {
         }
     }
 
-
+    //
     public static List<MaintenanceWorkDTO> getDataForTasks(int numberOfTasks, int depot0VehicleCount, int depot1VehicleCount) throws IOException, InterruptedException {
         JSONArray jsonArray = getMaintenances();
         ArrayList<MaintenanceWorkDTO> maintenanceWorkDTOS = populateMaintenancesFromJson(jsonArray, numberOfTasks);

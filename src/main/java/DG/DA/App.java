@@ -39,6 +39,7 @@ public class App {
 
     }
 
+    // calculates the real depotCount that takes empty depots to account
     public static int calculateDepotCount(int depot1VehicleCount, int depot2VehicleCount, int depotCount) {
         if (depot1VehicleCount > 0) {
             depotCount++;
@@ -49,6 +50,7 @@ public class App {
         return depotCount;
     }
 
+    // initializes depot list
     public static List<List<Integer>> createDepotLists(int depotCount) {
         List<List<Integer>> depots = new ArrayList<List<Integer>>(depotCount);
 
@@ -57,7 +59,7 @@ public class App {
         }
         return depots;
     }
-
+    // adds the correct vehicles to the correct depots
     public static void populateDepotsWithVehicles(int depot1VehicleCount, int depot2VehicleCount, List<List<Integer>> depots) {
         int totalNumberOfVehicles = depot1VehicleCount + depot2VehicleCount;
 
