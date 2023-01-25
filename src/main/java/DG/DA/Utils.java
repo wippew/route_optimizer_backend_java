@@ -113,6 +113,7 @@ public class Utils {
                 return TypeConstants.RAIDEVIRTAPIIRIHUOLLOT_12KK;
             case "ASETINLAITE":
                 return TypeConstants.ASETINLAITE;
+
             default:
                 System.out.print("OBSERVE A NEW TYPE NEEDS TO BE ADDED!!!");
                 return 60 * 60;
