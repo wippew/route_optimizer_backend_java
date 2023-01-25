@@ -30,7 +30,7 @@ public class App {
         boolean fetchNewDurations = true;
         if (fetchNewDurations) {
             Integer[][] duration = DurationService.getDurationMatrix(totalCount, data);
-            SOLVE_LP_ORTOOLS ortools = new SOLVE_LP_ORTOOLS();
+            SolveWithORTools ortools = new SolveWithORTools();
             List<List<String>> routesAsString = ortools.SolveOrToolsLP(duration, data, depot1VehicleCount, depot2VehicleCount, depots, depotCount);
             return Utils.populateMaintenanceRoutes(routesAsString, data);
         } else {

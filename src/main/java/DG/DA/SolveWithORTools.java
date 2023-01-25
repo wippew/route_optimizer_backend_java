@@ -14,13 +14,13 @@ import java.util.logging.Logger;
 
 import static DG.DA.Utils.printRoutesToSystemOutput;
 
-public class SOLVE_LP_ORTOOLS {
+public class SolveWithORTools {
 
-	public void SOLVE_LP_ORTOOLS() {
+	public void SolveWithORTools() {
 
 	}
 
-	private static final Logger logger = Logger.getLogger(SOLVE_LP_ORTOOLS.class.getName());
+	private static final Logger logger = Logger.getLogger(SolveWithORTools.class.getName());
 
 	public static List<List<String>> SolveOrToolsLP(Integer[][] duration, List<MaintenanceWorkDTO>  workDTO,
 			int depot1VehicleCount, int depot2VehicleCount, List<List<Integer>> depots,
