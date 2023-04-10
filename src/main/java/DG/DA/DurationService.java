@@ -60,8 +60,8 @@ public class DurationService {
 	      .addParameter("waypoint0", waypoint0)
 	      .addParameter("waypoint1", waypoint1)
 	      .addParameter("mode", "fastest;car;traffic:disabled")
-	      .addParameter("app_id", "CWt4Io2jWFGGLV9csUeX")
-	      .addParameter("app_code", "ow1GDLeuAgI2yoDwidUKFw")
+	      .addParameter("app_id", "")
+	      .addParameter("app_code", "")
 	      .build();
 	    httpGet.setURI(uri);
 	    DefaultHttpClient httpClient = new DefaultHttpClient();
